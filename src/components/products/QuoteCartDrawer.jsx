@@ -1,8 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  X, Minus, Plus, Trash2, ShoppingCart, ArrowRight, Package,
+  X, Minus, Plus, Trash2, ShoppingCart, Package,
   AlertCircle, FileText
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
@@ -16,7 +15,6 @@ export default function QuoteCartDrawer() {
     removeFromQuote,
     updateQuantity,
     clearQuote,
-    cartValue,
   } = useAppState();
 
   const formatPrice = (price) => {
@@ -114,7 +112,7 @@ export default function QuoteCartDrawer() {
                       {/* Image */}
                       <div className="w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-white">
                         <img
-                          src={item.image}
+                          src={item.imageSrc}
                           alt={item.name}
                           className="w-full h-full object-cover"
                         />

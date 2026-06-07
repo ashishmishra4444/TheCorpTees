@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown, Filter, X, RotateCcw } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
@@ -41,7 +41,7 @@ function FilterSection({ title, children, defaultOpen = true }) {
 }
 
 export default function SidebarFilter({ isMobileOpen, onMobileClose }) {
-  const { filters, setFilters, activeCategory, setCategory } = useAppState();
+  const { setFilters, activeCategory, setCategory } = useAppState();
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
   const [selectedMoq, setSelectedMoq] = useState(null);
   const [selectedMaterials, setSelectedMaterials] = useState([]);
@@ -259,14 +259,12 @@ export default function SidebarFilter({ isMobileOpen, onMobileClose }) {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-64 shrink-0">
-        <div className="sticky top-24 bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-          {filterContent}
-        </div>
+      {/* Desktop Sidebar Panel wrapper */}
+      <div className="w-full bg-white">
+        {filterContent}
       </div>
 
-      {/* Mobile Filter Drawer */}
+      {/* Mobile Filter Drawer Overlay container */}
       <AnimatePresence>
         {isMobileOpen && (
           <motion.div

@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Search, ShoppingCart, Menu, X, Phone, Mail, MapPin, ChevronDown,
-  Shirt, Gift, Package, GraduationCap, Flag, Building2, User
+  Shirt, Gift, Package, GraduationCap, Flag
 } from 'lucide-react';
 import { useAppState } from '../../context/AppStateContext';
 import { categories, subCategories } from '../../data/mockData';
 import CustomButton from '../shared/CustomButton';
+
+const ANNOUNCEMENTS = [
+  'Free shipping on orders above Rs. 25,000 | Bulk discounts up to 40%',
+  'Trusted by 500+ corporates across India | ISO 9001:2015 Certified',
+  'Express delivery available for urgent orders | 24-48 hour turnaround',
+  'Custom branding included on all orders above 100 units',
+];
 
 const categoryIcons = {
   'corporate-apparel': Shirt,
@@ -19,7 +26,6 @@ const categoryIcons = {
 
 export default function Navbar() {
   const {
-    quoteCart,
     cartTotal,
     activeCategory,
     setCategory,
@@ -31,25 +37,17 @@ export default function Navbar() {
   } = useAppState();
 
   const navigate = useNavigate();
-  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState(searchQuery);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [announcementIndex, setAnnouncementIndex] = useState(0);
   const searchRef = useRef(null);
   const dropdownTimeout = useRef(null);
 
-  const announcements = [
-    '🎉 Free shipping on orders above ₹25,000 | Bulk discounts up to 40%',
-    '🏆 Trusted by 500+ corporates across India | ISO 9001:2015 Certified',
-    '⚡ Express delivery available for urgent orders | 24-48 hour turnaround',
-    '🎁 Custom branding included on all orders above 100 units',
-  ];
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnnouncementIndex((prev) => (prev + 1) % announcements.length);
+      setAnnouncementIndex((prev) => (prev + 1) % ANNOUNCEMENTS.length);
     }, 5000);
     return () => clearInterval(interval);
   }, []);
@@ -59,14 +57,6 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    setSearchInput(searchQuery);
-  }, [searchQuery]);
-
-  useEffect(() => {
-    setActiveDropdown(null);
-  }, [location.pathname]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -96,25 +86,25 @@ export default function Navbar() {
   return (
     <>
       {/* Top Announcement Bar */}
-      <div className="bg-slate-900 text-white text-xs overflow-hidden">
+      <div className="bg-slate-900 text-white text-xs overflow-hidden w-full">
         <motion.div
           key={announcementIndex}
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -30, opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="py-2 px-4 text-center"
+          className="py-2 px-6 text-center"
         >
           <span className="inline-flex items-center gap-2">
             <span className="inline-block w-2 h-2 bg-amber-400 rounded-full animate-pulse" />
-            {announcements[announcementIndex]}
+            {ANNOUNCEMENTS[announcementIndex]}
           </span>
         </motion.div>
       </div>
 
-      {/* Contact Mini-Bar */}
-      <div className="bg-slate-100 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Contact Mini-Bar - Fluid Widescreen Spacing */}
+      <div className="bg-slate-100 border-b border-slate-200 w-full">
+        <div className="w-full px-6 md:px-12 lg:px-16">
           <div className="flex items-center justify-between py-1.5 text-xs text-slate-600">
             <div className="hidden sm:flex items-center gap-4">
               <span className="flex items-center gap-1">
@@ -138,14 +128,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Main Navbar */}
+      {/* Main Navbar - Full Bleed Breakout Container */}
       <motion.header
         className={`
-          sticky top-0 z-50 transition-all duration-300
+          sticky top-0 z-50 transition-all duration-300 w-full
           ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white shadow-sm'}
         `}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-6 md:px-12 lg:px-16">
           <div className="flex items-center justify-between h-16 lg:h-18">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2 shrink-0">
@@ -265,9 +255,9 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Desktop Category Nav */}
-        <div className="hidden lg:block border-t border-slate-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Desktop Category Nav - Fluid Bounds */}
+        <div className="hidden lg:block border-t border-slate-100 w-full">
+          <div className="w-full px-6 md:px-12 lg:px-16">
             <div className="flex items-center gap-1 py-2">
               <button
                 onClick={() => handleCategoryClick('all')}
@@ -346,7 +336,7 @@ export default function Navbar() {
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu Overlay Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -406,7 +396,7 @@ export default function Navbar() {
                 })}
               </div>
 
-              {/* Mobile Pages */}
+              {/* Mobile Pages Links */}
               <div className="p-4 border-t border-slate-200">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
                   Pages

@@ -1,53 +1,71 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Filter, SlidersHorizontal } from 'lucide-react';
-import ProductGrid from '../components/products/ProductGrid';
+import { useContext, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import SidebarFilter from '../components/layout/SidebarFilter';
+import ProductCard from '../components/products/ProductCard';
+import { AppStateContext } from '../context/AppStateContext';
+import { Grid, SlidersHorizontal } from 'lucide-react';
 
 export default function Gallery() {
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+  const { filteredProducts, setCategory, resetFilters } = useContext(AppStateContext);
+  const [searchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
+  useEffect(() => {
+    if (categoryParam) {
+      setCategory(categoryParam);
+    }
+  }, [categoryParam, setCategory]);
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Page Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
-            Product Gallery
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Browse our complete catalog of corporate merchandise and branding solutions
-          </p>
-        </motion.div>
-
-        {/* Mobile Filter Toggle */}
-        <div className="lg:hidden mb-4">
-          <button
-            onClick={() => setMobileFilterOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:border-amber-500 transition-colors"
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters
-          </button>
+    <div className="w-full flex-grow bg-slate-50 flex flex-col">
+      {/* Sub-Header Bar Fluid */}
+      <div className="w-full bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
+          <Grid className="w-4 h-4 text-slate-400" />
+          <span className="text-xs text-slate-500 uppercase tracking-widest font-mono">
+            Catalog Storefront / {filteredProducts.length} Systems Found
+          </span>
         </div>
+        <div className="flex items-center gap-4">
+          <span className="text-xs text-slate-400 hidden sm:inline font-sans">Showing synchronized real-time pricing tiers</span>
+        </div>
+      </div>
 
-        {/* Main Layout */}
-        <div className="flex gap-6">
-          {/* Sidebar */}
-          <SidebarFilter
-            isMobileOpen={mobileFilterOpen}
-            onMobileClose={() => setMobileFilterOpen(false)}
-          />
-
-          {/* Product Grid */}
-          <div className="flex-1 min-w-0">
-            <ProductGrid showFilters={true} />
+      {/* Main Structural Matrix Breakout Layout */}
+      <div className="w-full flex flex-1 items-stretch">
+        
+        {/* Left Frame Border Sidebar */}
+        <aside className="w-72 hidden lg:block border-r border-slate-200 bg-white shrink-0">
+          <div className="sticky top-16 h-[calc(100vh-8rem)] overflow-y-auto p-6">
+            <SidebarFilter />
           </div>
-        </div>
+        </aside>
+
+        {/* High-Density Grid Wrapper Viewport Panel */}
+        <main className="flex-1 px-4 sm:px-6 py-8">
+          {filteredProducts.length === 0 ? (
+            <div className="w-full h-96 flex flex-col items-center justify-center text-center bg-white border border-dashed border-slate-300 rounded-2xl p-8">
+              <SlidersHorizontal className="w-10 h-10 text-slate-300 mb-3" />
+              <h3 className="text-lg font-medium text-slate-800 mb-1">No Variants Matches</h3>
+              <p className="text-sm text-slate-400 max-w-sm">Refine your custom search parameters or reset your categories toolbar to show all.</p>
+              <button 
+                onClick={resetFilters}
+                className="mt-4 px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs tracking-wider uppercase font-medium transition-colors"
+              >
+                Reset Storefront
+              </button>
+            </div>
+          ) : (
+            /* High Density 5 Column Window Grid Layout */
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="w-full">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );

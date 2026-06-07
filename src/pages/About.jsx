@@ -1,9 +1,9 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import {
   Target, Eye, Heart, Users, Award, Globe, TrendingUp, ArrowRight,
-  MessageSquare, Palette, FileCheck, ShieldCheck, Truck, Star
+  Star
 } from 'lucide-react';
 import { processSteps, testimonials } from '../data/mockData';
 import CustomButton from '../components/shared/CustomButton';

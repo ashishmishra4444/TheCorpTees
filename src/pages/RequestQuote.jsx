@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ChevronRight,
   ChevronLeft,
@@ -11,12 +11,8 @@ import {
   Phone,
   Package,
   Calendar,
-  Upload,
-  MessageSquare,
-  FileText,
   AlertCircle,
   Send,
-  RotateCcw,
   CheckCircle2,
 } from "lucide-react";
 import { useAppState } from "../context/AppStateContext";
@@ -41,6 +37,7 @@ export default function RequestQuote() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [referenceId, setReferenceId] = useState("");
   const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
@@ -106,6 +103,7 @@ export default function RequestQuote() {
     // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsSubmitting(false);
+    setReferenceId(`RFQ-${Date.now().toString(36).toUpperCase()}`);
     setIsSubmitted(true);
     clearQuote();
   };
@@ -144,7 +142,7 @@ export default function RequestQuote() {
           <div className="bg-slate-50 rounded-xl p-4 mb-6 text-left">
             <p className="text-xs text-slate-500 mb-1">Reference ID</p>
             <p className="text-sm font-mono font-semibold text-slate-900">
-              RFQ-{Date.now().toString(36).toUpperCase()}
+              {referenceId}
             </p>
           </div>
           <div className="space-y-2">

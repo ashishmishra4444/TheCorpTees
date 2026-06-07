@@ -1,398 +1,199 @@
-import React, { useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useInView } from 'framer-motion';
-import {
-  ArrowRight, Star, TrendingUp, Users, Award, Clock, Shield,
-  MessageSquare, Palette, FileCheck, ShieldCheck, Truck,
-  ChevronRight, Building2, Rocket, GraduationCap, HeartPulse,
-  Factory, Hotel, CalendarDays, Landmark, Zap
-} from 'lucide-react';
-import { useAppState } from '../context/AppStateContext';
-import { processSteps, whyChooseUs, testimonials, industries } from '../data/mockData';
-import ProductGrid from '../components/products/ProductGrid';
-import CustomButton from '../components/shared/CustomButton';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ShieldCheck, Award, Users, Truck, ArrowRight } from 'lucide-react';
+import { categories } from '../data/mockData';
 
-const industryIcons = {
-  corporate: Building2,
-  startups: Rocket,
-  education: GraduationCap,
-  healthcare: HeartPulse,
-  manufacturing: Factory,
-  hospitality: Hotel,
-  events: CalendarDays,
-  government: Landmark,
-};
-
-function SectionReveal({ children, className = '' }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.6, type: 'spring', stiffness: 100, damping: 20 }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
+const HERO_SLIDES = [
+  {
+    desktopImage: "/products/welcomekit-desktop.png",
+    tabletImage: "/products/welcomekit-tablet.png",
+    mobileImage: "/products/welcomekit-1.png",
+    title: "Premium Corporate Merchandise Architected for Scale",
+    subtitle: "From executive onboarding kits to custom apparel, we deploy high-end branding solutions aligned with your corporate identity guidelines."
+  },
+  {
+    desktopImage: "/products/polo-desktop.png",
+    tabletImage: "/products/polo-tablet.png",
+    mobileImage: "/products/polo-1.png",
+    title: "Industry-Grade Premium Apparel",
+    subtitle: "Engineered with ultra-combed 220 GSM fabrics, precision micro-embroidery patterns, and premium detailing that stands out."
+  },
+  {
+    desktopImage: "/products/smartbottle-desktop.png",
+    tabletImage: "/products/smartbottle-tablet.png",
+    mobileImage: "/products/smartbottle-1.png",
+    title: "Next-Gen Executive Technical Gifts",
+    subtitle: "Discover high-utility, smart IoT products and eco-conscious premium gear curated intentionally for modern workforces."
+  }
+];
 
 export default function Home() {
-  const { setCategory } = useAppState();
-  const productsRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  const scrollToProducts = () => {
-    productsRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section - Dual Column Asymmetrical Layout */}
-      <section className="relative bg-gradient-to-br from-slate-50 via-white to-amber-50/30 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[85vh] py-12 lg:py-0">
-            {/* Left Column - Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, type: 'spring', stiffness: 100 }}
-              className="order-2 lg:order-1"
-            >
-              {/* Trust Badge */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
+    <div className="w-full bg-white flex flex-col overflow-x-hidden">
+      
+      <section className="relative w-full h-[85vh] sm:h-[90vh] bg-[#0b0f14] flex items-center justify-center overflow-hidden">
+        
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.7, ease: "easeInOut" }}
+            className="absolute inset-0 w-full h-full flex items-center"
+          >
+            <picture className="w-full h-full select-none pointer-events-none">
+              <source media="(min-width: 1024px)" srcSet={HERO_SLIDES[currentSlide].desktopImage} />
+              <source media="(min-width: 640px)" srcSet={HERO_SLIDES[currentSlide].tabletImage} />
+              <motion.img 
+                initial={{ scale: 1.04 }}
+                animate={{ scale: 1 }}
+                exit={{ scale: 0.98 }}
+                transition={{ duration: 0.9, ease: "easeOut" }}
+                src={HERO_SLIDES[currentSlide].mobileImage} 
+                alt="" 
+                className="w-full h-full object-cover object-center lg:object-[80%_center]"
+              />
+            </picture>
+            
+            {/* Optimized Gradient: Lighter on mobile, balanced on desktop */}
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent lg:bg-gradient-to-r lg:from-slate-950/90 lg:via-slate-950/50 lg:to-transparent z-10" />
+
+            <div className="absolute inset-0 z-20 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 flex justify-start items-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 rounded-full mb-6"
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ delay: 0.15, duration: 0.5, ease: "easeOut" }}
+                className="w-full max-w-2xl backdrop-blur-sm bg-slate-950/30 border border-white/5 rounded-2xl p-6 sm:p-12 shadow-2xl text-white"
               >
-                <Zap className="w-3.5 h-3.5 text-amber-600" />
-                <span className="text-xs font-semibold text-amber-700">
-                  India's #1 Corporate Merchandise Brand
+                <span className="inline-flex items-center text-xs font-semibold uppercase tracking-[0.25em] text-cyan-400 mb-4">
+                  B2B Production Enterprise
                 </span>
-              </motion.div>
-
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1] mb-6">
-                Where Brands
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-amber-600">
-                  Wear Their Identity
-                </span>
-              </h1>
-
-              <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-lg">
-                From Employee Welcome Kits to Corporate Uniforms, we create merchandise
-                that represents your brand. Trusted by 500+ companies across India.
-              </p>
-
-              {/* Metric Badges */}
-              <div className="flex flex-wrap gap-3 mb-8">
-                {[
-                  { icon: Users, label: '500+ Clients', value: 'Served' },
-                  { icon: TrendingUp, label: '10,000+', value: 'Units Delivered' },
-                  { icon: Award, label: 'ISO 9001', value: 'Certified' },
-                  { icon: Clock, label: '24-48 Hr', value: 'Express Delivery' },
-                ].map((metric, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.4 + idx * 0.1 }}
-                    className="flex items-center gap-2 px-3 py-2 bg-white rounded-lg border border-slate-200 shadow-sm"
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 leading-[1.15]">
+                  {HERO_SLIDES[currentSlide].title}
+                </h1>
+                <p className="text-slate-200 text-sm sm:text-base mb-8 font-light leading-relaxed max-w-lg">
+                  {HERO_SLIDES[currentSlide].subtitle}
+                </p>
+                
+                <div className="flex flex-wrap gap-4 items-center">
+                  <Link 
+                    to="/request-quote" 
+                    className="px-8 py-3.5 rounded-lg bg-white text-slate-950 font-medium tracking-wide shadow-lg hover:bg-amber-500 hover:text-slate-900 transition-colors duration-200 text-center flex items-center justify-center gap-2 group"
                   >
-                    <metric.icon className="w-4 h-4 text-amber-500" />
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{metric.label}</p>
-                      <p className="text-[10px] text-slate-500">{metric.value}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* CTAs */}
-              <div className="flex flex-wrap gap-3">
-                <CustomButton size="lg" icon={ArrowRight} iconPosition="right" onClick={scrollToProducts}>
-                  View Our Products
-                </CustomButton>
-                <Link to="/request-quote">
-                  <CustomButton variant="outline" size="lg">
                     Get a Free Quote
-                  </CustomButton>
-                </Link>
-              </div>
-            </motion.div>
-
-            {/* Right Column - Product Collage Grid */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7, delay: 0.2, type: 'spring', stiffness: 100 }}
-              className="order-1 lg:order-2"
-            >
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-                  className="space-y-3 sm:space-y-4"
-                >
-                  <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
-                    <img
-                      src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400&h=533&fit=crop"
-                      alt="Corporate Welcome Kit"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="aspect-square rounded-2xl overflow-hidden shadow-lg">
-                    <img
-                      src="https://images.unsplash.com/photo-1625910513413-5fc4e5e6727a?w=400&h=400&fit=crop"
-                      alt="Corporate Polo"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </motion.div>
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  className="space-y-3 sm:space-y-4 pt-6 sm:pt-8"
-                >
-                  <div className="aspect-square rounded-2xl overflow-hidden shadow-lg">
-                    <img
-                      src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop"
-                      alt="Corporate Hoodie"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="aspect-[3/4] rounded-2xl overflow-hidden shadow-lg">
-                    <img
-                      src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=533&fit=crop"
-                      alt="Conference Kit"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Decorative Elements */}
-        <div className="absolute top-20 right-10 w-72 h-72 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-slate-200/30 rounded-full blur-3xl pointer-events-none" />
-      </section>
-
-      {/* Product Discovery Feed - Meesho Style */}
-      <section ref={productsRef} className="py-12 lg:py-16 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="text-center mb-8">
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
-                Discover Premium Corporate Merchandise
-              </h2>
-              <p className="text-sm text-slate-500 max-w-2xl mx-auto">
-                Browse our extensive catalog of corporate apparel, employee kits, gifting solutions, and event merchandise.
-              </p>
-            </div>
-          </SectionReveal>
-
-          <ProductGrid showFilters={false} limit={10} title="Featured Products" />
-
-          <div className="text-center mt-8">
-            <Link to="/gallery">
-              <CustomButton variant="outline" icon={ArrowRight} iconPosition="right">
-                View All Products
-              </CustomButton>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Why Choose Us */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="text-center mb-12">
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-                Why Choose Us
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">
-                The Corp Tees Advantage
-              </h2>
-            </div>
-          </SectionReveal>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {whyChooseUs.map((item, index) => (
-              <SectionReveal key={index}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="p-6 bg-slate-50 rounded-xl border border-slate-100 hover:border-amber-200 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
-                    <item.icon className="w-6 h-6 text-amber-600" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">{item.title}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed">{item.description}</p>
-                </motion.div>
-              </SectionReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Our Process - Timeline */}
-      <section className="py-16 bg-slate-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="text-center mb-12">
-              <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider">
-                Our Process
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold mt-2">
-                From Concept to Delivery in 5 Steps
-              </h2>
-            </div>
-          </SectionReveal>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
-            {processSteps.map((step, index) => (
-              <SectionReveal key={index}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="relative text-center"
-                >
-                  {/* Connector Line (desktop only) */}
-                  {index < processSteps.length - 1 && (
-                    <div className="hidden lg:block absolute top-8 left-[60%] w-[80%] h-0.5 bg-slate-700" />
-                  )}
-
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center mx-auto mb-4 relative z-10">
-                    <step.icon className="w-7 h-7 text-slate-900" />
-                  </div>
-                  <div className="w-8 h-8 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-3 border-2 border-amber-500">
-                    <span className="text-xs font-bold text-amber-500">{step.step}</span>
-                  </div>
-                  <h3 className="text-sm font-semibold mb-2">{step.title}</h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">{step.description}</p>
-                </motion.div>
-              </SectionReveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Industries We Serve */}
-      <section className="py-16 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="text-center mb-12">
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-                Industries We Serve
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">
-                Trusted Across 8 Key Sectors
-              </h2>
-            </div>
-          </SectionReveal>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {industries.map((industry, index) => {
-              const Icon = industryIcons[industry.id] || Building2;
-              return (
-                <SectionReveal key={index}>
-                  <motion.div
-                    whileHover={{ y: -4, scale: 1.02 }}
-                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                    className="group p-5 bg-white rounded-xl border border-slate-200 hover:border-amber-300 hover:shadow-lg transition-all duration-300 cursor-pointer"
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link 
+                    to="/gallery" 
+                    className="px-8 py-3.5 rounded-lg border border-white/30 text-white font-medium tracking-wide backdrop-blur-sm hover:bg-white/10 transition-colors duration-200 text-center"
                   >
-                    <div className="w-12 h-12 bg-slate-100 group-hover:bg-amber-100 rounded-xl flex items-center justify-center mb-3 transition-colors">
-                      <Icon className="w-6 h-6 text-slate-600 group-hover:text-amber-600 transition-colors" />
-                    </div>
-                    <h3 className="text-sm font-semibold text-slate-900 mb-1">{industry.name}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed">{industry.description}</p>
-                    <div className="flex items-center gap-1 mt-3 text-xs font-medium text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span>Explore</span>
-                      <ChevronRight className="w-3 h-3" />
-                    </div>
-                  </motion.div>
-                </SectionReveal>
-              );
-            })}
+                    View Our Products
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="absolute bottom-6 right-6 z-30 flex gap-2">
+          {HERO_SLIDES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-amber-500' : 'w-2 bg-white/40'}`}
+              aria-label={`Navigate to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Trust Signals Section */}
+      <section className="w-full bg-slate-900 text-white py-10 border-b border-slate-800">
+        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
+              <Award className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-medium text-base mb-1">Premium Quality Products</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Strict adherence to premium specifications, high GSM weights, and fine stitching metrics.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-medium text-base mb-1">Custom Branding Solutions</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Laser markings, metallic badges, high-density embroidery, or structural silk prints.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
+              <Users className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-medium text-base mb-1">Bulk Order Specialists</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Highly responsive pricing frameworks built dynamically for thousands of units.</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
+              <Truck className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-medium text-base mb-1">Reliable Pan-India Delivery</h4>
+              <p className="text-xs text-slate-400 leading-relaxed">Fast-tracked dispatch models with fully secure door-to-door bulk shipping routes.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionReveal>
-            <div className="text-center mb-12">
-              <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">
-                Testimonials
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-2">
-                What Our Clients Say
-              </h2>
-            </div>
-          </SectionReveal>
+      {/* Category Matrix */}
+      <section className="w-full py-20 bg-slate-50">
+        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16">
+          <div className="text-center max-w-xl mx-auto mb-16">
+            <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">Curated Assortment</span>
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mt-2">Shop by Category</h2>
+            <div className="w-12 h-1 bg-slate-900 mx-auto mt-4" />
+          </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {testimonials.map((testimonial, index) => (
-              <SectionReveal key={index}>
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="p-5 bg-slate-50 rounded-xl border border-slate-100 hover:border-amber-200 hover:shadow-md transition-all duration-300"
-                >
-                  <div className="flex items-center gap-1 mb-3">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                    ))}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 justify-center">
+            {categories.map((cat) => (
+              <motion.div
+                whileHover={{ y: -6 }}
+                key={cat.id}
+                className="flex flex-col items-center text-center group"
+              >
+                <Link to={`/gallery?category=${cat.id}`} className="w-full flex flex-col items-center">
+                  <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full overflow-hidden border border-slate-200/80 shadow-md group-hover:shadow-xl transition-all duration-300 mb-4 bg-white flex items-center justify-center p-2">
+                    <img 
+                      src={cat.image} 
+                      alt={cat.name} 
+                      className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-slate-950/10 group-hover:bg-transparent transition-colors duration-300" />
                   </div>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                      {testimonial.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-900">{testimonial.name}</p>
-                      <p className="text-xs text-slate-500">
-                        {testimonial.role}, {testimonial.company}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </SectionReveal>
+                  <h3 className="font-medium text-sm sm:text-base text-slate-800 group-hover:text-slate-950 transition-colors font-sans">
+                    {cat.name}
+                  </h3>
+                  <span className="text-xs text-slate-400 mt-1 font-mono">{cat.count} Variants</span>
+                </Link>
+              </motion.div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section className="py-16 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <SectionReveal>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Ready to Transform Your Brand?
-            </h2>
-            <p className="text-slate-400 mb-8 max-w-2xl mx-auto">
-              Get a free quote within 24 hours. No commitments, no hidden charges.
-              Just premium merchandise tailored to your brand.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Link to="/request-quote">
-                <CustomButton size="lg" icon={ArrowRight} iconPosition="right">
-                  Get a Free Quote Now
-                </CustomButton>
-              </Link>
-              <Link to="/gallery">
-                <CustomButton variant="outline" size="lg" className="border-white/30 text-white hover:bg-white/10">
-                  Browse Products
-                </CustomButton>
-              </Link>
-            </div>
-          </SectionReveal>
         </div>
       </section>
     </div>

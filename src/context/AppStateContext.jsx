@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer, useCallback } from 'react';
+import { createContext, useContext, useReducer, useCallback, useMemo } from 'react';
+import { products } from '../data/mockData';
 
 const initialState = {
   quoteCart: [],
@@ -77,7 +78,8 @@ function appReducer(state, action) {
   }
 }
 
-const AppStateContext = createContext(null);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AppStateContext = createContext(null);
 
 export function AppStateProvider({ children }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
@@ -109,6 +111,19 @@ export function AppStateProvider({ children }) {
   const setFilters = useCallback((f) => dispatch({ type: 'SET_FILTERS', payload: f }), []);
   const toggleMobileMenu = useCallback(() => dispatch({ type: 'TOGGLE_MOBILE_MENU' }), []);
   const setUserProfile = useCallback((p) => dispatch({ type: 'SET_USER_PROFILE', payload: p }), []);
+  const resetFilters = useCallback(() => {
+    dispatch({ type: 'SET_CATEGORY', payload: 'all' });
+    dispatch({ type: 'SET_SEARCH', payload: '' });
+    dispatch({
+      type: 'SET_FILTERS',
+      payload: {
+        priceRange: [0, 50000],
+        minOrder: 0,
+        material: [],
+        productType: [],
+      },
+    });
+  }, []);
 
   const cartTotal = state.quoteCart.reduce((sum, item) => sum + item.quantity, 0);
   const cartValue = state.quoteCart.reduce((sum, item) => {
@@ -116,31 +131,82 @@ export function AppStateProvider({ children }) {
     return sum + (price * item.quantity);
   }, 0);
 
+  const filteredProducts = useMemo(() => {
+    let result = [...products];
+
+    if (state.activeCategory !== 'all') {
+      result = result.filter((product) => product.category === state.activeCategory);
+    }
+
+    if (state.searchQuery) {
+      const query = state.searchQuery.toLowerCase();
+      result = result.filter((product) =>
+        product.name.toLowerCase().includes(query) ||
+        product.subCategory.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query)
+      );
+    }
+
+    const [minPrice, maxPrice] = state.filters.priceRange;
+    result = result.filter((product) => product.priceEstimate >= minPrice && product.priceEstimate <= maxPrice);
+
+    if (state.filters.minOrder > 0) {
+      result = result.filter((product) => product.minOrder <= state.filters.minOrder);
+    }
+
+    if (state.filters.material.length > 0) {
+      result = result.filter((product) =>
+        state.filters.material.some((material) =>
+          product.material.toLowerCase().includes(material.toLowerCase())
+        )
+      );
+    }
+
+    return result;
+  }, [state.activeCategory, state.filters, state.searchQuery]);
+
+  const contextValue = {
+    ...state,
+    filteredProducts,
+    cartTotal,
+    cartValue,
+    addToQuote,
+    removeFromQuote,
+    updateQuantity,
+    clearQuote,
+    toggleCart,
+    setCartOpen,
+    setCategory,
+    setIndustry,
+    setSearch,
+    setFilters,
+    resetFilters,
+    toggleMobileMenu,
+    setUserProfile,
+    state: {
+      ...state,
+      filteredProducts,
+      cartTotal,
+      cartValue,
+    },
+    // Alias actions schema to keep legacy components functioning.
+    actions: {
+      addToQuoteCart: addToQuote,
+      openDrawer: () => dispatch({ type: 'SET_CART_OPEN', payload: true }),
+      setCategoryFilter: setCategory,
+      resetFilters,
+    }
+  };
+
   return (
-    <AppStateContext.Provider
-      value={{
-        ...state,
-        cartTotal,
-        cartValue,
-        addToQuote,
-        removeFromQuote,
-        updateQuantity,
-        clearQuote,
-        toggleCart,
-        setCartOpen,
-        setCategory,
-        setIndustry,
-        setSearch,
-        setFilters,
-        toggleMobileMenu,
-        setUserProfile,
-      }}
-    >
+    <AppStateContext.Provider value={contextValue}>
       {children}
     </AppStateContext.Provider>
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAppState() {
   const context = useContext(AppStateContext);
   if (!context) throw new Error('useAppState must be used within AppStateProvider');

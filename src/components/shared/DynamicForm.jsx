@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Eye, EyeOff, Upload, X, Check } from 'lucide-react';
 
@@ -337,7 +337,6 @@ export function SelectField({
   placeholder = 'Select an option',
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -364,7 +363,7 @@ export function SelectField({
         className={`
           relative border-2 rounded-xl px-3 py-2.5 cursor-pointer
           transition-all duration-200
-          ${error ? 'border-red-500 bg-red-50' : isFocused || isOpen ? 'border-amber-500 bg-white' : 'border-slate-200 bg-slate-50'}
+          ${error ? 'border-red-500 bg-red-50' : isOpen ? 'border-amber-500 bg-white' : 'border-slate-200 bg-slate-50'}
           ${disabled ? 'opacity-60 cursor-not-allowed' : ''}
         `}
       >

@@ -1,239 +1,93 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Shirt,
-  ArrowRight,
-  Heart,
-  ExternalLink,
-} from "lucide-react";
-import CustomButton from "../shared/CustomButton";
-
-const footerLinks = {
-  Products: [
-    { label: "Corporate Apparel", path: "/gallery" },
-    { label: "Employee Kits", path: "/gallery" },
-    { label: "Corporate Gifting", path: "/gallery" },
-    { label: "School & College", path: "/gallery" },
-    { label: "Event Merchandise", path: "/gallery" },
-  ],
-  Company: [
-    { label: "About Us", path: "/about" },
-    { label: "Industries We Serve", path: "/industries" },
-    { label: "Our Process", path: "/about" },
-    { label: "Testimonials", path: "/about" },
-    { label: "Blog", path: "#" },
-  ],
-  Support: [
-    { label: "Request a Quote", path: "/request-quote" },
-    { label: "Contact Us", path: "/contact" },
-    { label: "FAQ", path: "#" },
-    { label: "Shipping Policy", path: "#" },
-    { label: "Return Policy", path: "#" },
-  ],
-  Legal: [
-    { label: "Privacy Policy", path: "#" },
-    { label: "Terms of Service", path: "#" },
-    { label: "Cookie Policy", path: "#" },
-    { label: "GST Information", path: "#" },
-  ],
-};
+import { Link } from 'react-router-dom';
+import { Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
-  const [email, setEmail] = React.useState("");
-  const [subscribed, setSubscribed] = React.useState(false);
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email) {
-      setSubscribed(true);
-      setEmail("");
-      setTimeout(() => setSubscribed(false), 3000);
-    }
-  };
-
   return (
-    <footer className="bg-slate-900 text-slate-300">
-      {/* Newsletter Section */}
-      <div className="border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-            <div className="text-center lg:text-left">
-              <h3 className="text-xl font-bold text-white mb-1">
-                Stay Updated with Corporate Trends
-              </h3>
-              <p className="text-sm text-slate-400">
-                Get exclusive offers, product launches, and branding insights
-                delivered to your inbox.
-              </p>
-            </div>
-            <form
-              onSubmit={handleSubscribe}
-              className="flex w-full max-w-md gap-2"
-            >
-              <div className="relative flex-1">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 bg-slate-800 border border-slate-700 rounded-xl text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors"
-                />
-              </div>
-              <CustomButton type="submit" size="md" className="shrink-0">
-                {subscribed ? "Subscribed!" : "Subscribe"}
-              </CustomButton>
-            </form>
+    <footer className="w-full bg-slate-950 text-slate-400 font-sans border-t border-slate-900 shrink-0">
+      
+      {/* Upper Matrix Fluid Area */}
+      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+        
+        {/* Brand Information Section */}
+        <div className="flex flex-col gap-5">
+          <div className="flex items-center gap-2 text-white">
+            <span className="text-xl font-bold tracking-tight">
+              THE CORP<span className="text-cyan-400 font-light">TEES</span>
+            </span>
           </div>
-        </div>
-      </div>
-
-      {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-          {/* Brand Column */}
-          <div className="col-span-2 md:col-span-3 lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg flex items-center justify-center">
-                <Shirt className="w-5 h-5 text-slate-900" />
-              </div>
-              <div>
-                <h2 className="text-lg font-bold text-white">The Corp Tees</h2>
-                <p className="text-[10px] text-slate-500 -mt-0.5 tracking-wide uppercase">
-                  Premium Corporate Merchandise
-                </p>
-              </div>
-            </Link>
-            <p className="text-sm text-slate-400 mb-4 leading-relaxed">
-              India's most trusted corporate merchandise brand. We transform
-              your brand identity into premium-quality products that employees
-              love and customers remember.
-            </p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-slate-400">
-                <Phone className="w-4 h-4 text-amber-500" />
-                <span>+91-XXX-XXX-XXXX</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-400">
-                <Mail className="w-4 h-4 text-amber-500" />
-                <span>info@thecorptees.com</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-slate-400">
-                <MapPin className="w-4 h-4 text-amber-500" />
-                <span>Indore, Madhya Pradesh, India</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 mt-4">
-              {["Fb", "Ig", "In", "X"].map((label, idx) => (
-                <motion.a
-                  key={idx}
-                  href="#"
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-9 h-9 bg-slate-800 rounded-lg flex items-center justify-center text-xs font-bold text-slate-400 hover:text-amber-500 hover:bg-slate-700 transition-colors"
-                >
-                  {label}
-                </motion.a>
-              ))}
-            </div>
-          </div>
-
-          {/* Link Columns */}
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h4 className="text-sm font-semibold text-white uppercase tracking-wider mb-4">
-                {title}
-              </h4>
-              <ul className="space-y-2.5">
-                {links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      to={link.path}
-                      className="text-sm text-slate-400 hover:text-amber-500 transition-colors inline-flex items-center gap-1 group"
-                    >
-                      <ArrowRight className="w-3 h-3 opacity-0 -ml-4 group-hover:opacity-100 group-hover:ml-0 transition-all" />
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Industries Served */}
-      <div className="border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
-            Industries We Serve
+          <p className="text-xs text-slate-400 leading-relaxed font-light">
+            Premium corporate bulk merchandise, apparel engineering, and tactical gifting infrastructures engineered seamlessly for distributed global tech teams.
           </p>
-          <div className="flex flex-wrap gap-2">
-            {[
-              "Corporate Companies",
-              "Startups",
-              "Schools & Colleges",
-              "Hospitals",
-              "Manufacturing",
-              "Hotels & Hospitality",
-              "Event Management",
-              "Government",
-            ].map((industry) => (
-              <span
-                key={industry}
-                className="px-3 py-1 bg-slate-800 rounded-full text-xs text-slate-400 hover:text-amber-500 hover:bg-slate-700 transition-colors cursor-default"
-              >
-                {industry}
-              </span>
-            ))}
+          
+          {/* Fully Padded Clean Vector Social Container Icons */}
+          <div className="flex items-center gap-3 pt-2">
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200" aria-label="Instagram Profile">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              </svg>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200" aria-label="LinkedIn Network">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="w-9 h-9 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200" aria-label="Facebook Page">
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10s-10 4.477-10 10c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54v-2.891h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562v1.878h2.773l-.443 2.891h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+              </svg>
+            </a>
           </div>
+        </div>
+
+        {/* Quick Links Navigation */}
+        <div className="flex flex-col gap-4">
+          <h4 className="text-white text-xs font-semibold uppercase tracking-widest font-mono">Product Categories</h4>
+          <ul className="space-y-2.5 text-xs font-light">
+            <li><Link to="/gallery?category=corporate-apparel" className="hover:text-white transition-colors flex items-center justify-between group">Corporate Apparel <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+            <li><Link to="/gallery?category=employee-kits" className="hover:text-white transition-colors flex items-center justify-between group">Onboarding Kits <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+            <li><Link to="/gallery?category=corporate-gifting" className="hover:text-white transition-colors flex items-center justify-between group">Executive Gifting <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+            <li><Link to="/gallery?category=event-merchandise" className="hover:text-white transition-colors flex items-center justify-between group">Event Production <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" /></Link></li>
+          </ul>
+        </div>
+
+        {/* Corporate Framework Routing Links */}
+        <div className="flex flex-col gap-4">
+          <h4 className="text-white text-xs font-semibold uppercase tracking-widest font-mono">Corporate Resources</h4>
+          <ul className="space-y-2.5 text-xs font-light">
+            <li><Link to="/about" className="hover:text-white transition-colors">About Corporate Venture</Link></li>
+            <li><Link to="/industries" className="hover:text-white transition-colors">Verticals & Industries</Link></li>
+            <li><Link to="/contact" className="hover:text-white transition-colors">Contact Account Executives</Link></li>
+            <li><Link to="/request-quote" className="hover:text-white transition-colors">Quote Workflow Portal</Link></li>
+          </ul>
+        </div>
+
+        {/* HQ Coordinates & Physical Location Context */}
+        <div className="flex flex-col gap-4">
+          <h4 className="text-white text-xs font-semibold uppercase tracking-widest font-mono">HQ Operations</h4>
+          <ul className="space-y-3.5 text-xs font-light">
+            <li className="flex items-start gap-2.5 leading-relaxed">
+              <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+              <span>Vijay Nagar, Sector C,<br />Indore, Madhya Pradesh, India</span>
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Phone className="w-4 h-4 text-cyan-400 shrink-0" />
+              <span>+91 (731) 405-9281</span>
+            </li>
+            <li className="flex items-center gap-2.5">
+              <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
+              <span>b2b@thecorptees.com</span>
+            </li>
+          </ul>
         </div>
       </div>
 
-      {/* Copyright & Developer Card */}
-      <div className="border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="text-sm text-slate-500 text-center md:text-left">
-              <p>
-                © {new Date().getFullYear()} The Corp Tees. All rights reserved.
-                <span className="inline-flex items-center gap-1 ml-1">
-                  Made with{" "}
-                  <Heart className="w-3 h-3 text-red-500 fill-red-500" /> in
-                  Indore, India
-                </span>
-              </p>
-            </div>
-
-            {/* Developer Card */}
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="flex items-center gap-3 bg-slate-800 rounded-xl px-4 py-3 border border-slate-700"
-            >
-              <div className="w-10 h-10 bg-gradient-to-br from-amber-500 to-amber-600 rounded-full flex items-center justify-center text-slate-900 font-bold text-sm">
-                AM
-              </div>
-              <div>
-                <p className="text-xs font-semibold text-white">Developed by</p>
-                <p className="text-sm font-bold text-amber-500">
-                  Ashish Kumar Mishra
-                </p>
-                <p className="text-[10px] text-slate-400">
-                  Principal Frontend Engineer
-                </p>
-              </div>
-              <a
-                href="#"
-                className="ml-2 p-1.5 text-slate-400 hover:text-amber-500 transition-colors"
-                title="View Portfolio"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </motion.div>
+      {/* Lower Copyright Row Layout - Developer components removed entirely as requested */}
+      <div className="w-full bg-slate-950 border-t border-slate-900/60 py-6">
+        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-light">
+          <p>© 2026 The Corp Tees. All rights reserved. Design & Maintained by WebNxt</p>
+          <div className="flex gap-6 text-slate-500 font-mono text-[11px]">
+            <a href="/terms" className="hover:text-slate-300 transition-colors">TERMS OF SALE</a>
+            <a href="/privacy" className="hover:text-slate-300 transition-colors">PRIVACY CODE</a>
           </div>
         </div>
       </div>

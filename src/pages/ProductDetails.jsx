@@ -1,10 +1,9 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Star, ShoppingCart, ChevronLeft, Check, Minus, Plus,
-  Ruler, Palette, Printer, Clock, Shield, Truck, AlertCircle,
-  FileText, Heart, Share2, ZoomIn
+  Printer, Clock, Shield, Truck, FileText, ZoomIn
 } from 'lucide-react';
 import { products } from '../data/mockData';
 import { useAppState } from '../context/AppStateContext';
@@ -23,6 +22,12 @@ export default function ProductDetails() {
   const [addedToQuote, setAddedToQuote] = useState(false);
 
   const product = useMemo(() => products.find((p) => p.id === id), [id]);
+
+  // FIX: Map local data model src catalog strings into a virtual gallery array cleanly
+  const productImages = useMemo(() => {
+    if (!product) return [];
+    return [product.imageSrc, product.hoverImageSrc].filter(Boolean);
+  }, [product]);
 
   if (!product) {
     return (
@@ -78,28 +83,20 @@ export default function ProductDetails() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 py-6">
         {/* Breadcrumb */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex items-center gap-2 text-sm text-slate-500 mb-6"
-        >
+        <div className="flex items-center gap-2 text-sm text-slate-500 mb-6">
           <Link to="/" className="hover:text-amber-600 transition-colors">Home</Link>
           <ChevronLeft className="w-3 h-3 rotate-180" />
           <Link to="/gallery" className="hover:text-amber-600 transition-colors">Gallery</Link>
           <ChevronLeft className="w-3 h-3 rotate-180" />
           <span className="text-slate-900 font-medium truncate">{product.name}</span>
-        </motion.div>
+        </div>
 
         {/* Main Product Layout */}
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Left - Image Gallery */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div>
             {/* Main Image with Zoom */}
             <div
               className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-white border border-slate-200 cursor-zoom-in"
@@ -108,15 +105,15 @@ export default function ProductDetails() {
               onMouseMove={handleMouseMove}
             >
               <img
-                src={product.images[selectedImage]}
+                src={productImages[selectedImage] || product.imageSrc}
                 alt={product.name}
                 className="w-full h-full object-cover"
               />
-              {isZoomed && (
+              {isZoomed && productImages[selectedImage] && (
                 <div
                   className="absolute inset-0 bg-no-repeat pointer-events-none"
                   style={{
-                    backgroundImage: `url(${product.images[selectedImage]})`,
+                    backgroundImage: `url(${productImages[selectedImage]})`,
                     backgroundPosition: `${zoomPosition.x}% ${zoomPosition.y}%`,
                     backgroundSize: '200%',
                   }}
@@ -136,7 +133,7 @@ export default function ProductDetails() {
 
             {/* Thumbnails */}
             <div className="flex gap-2 mt-3 overflow-x-auto pb-2">
-              {product.images.map((img, idx) => (
+              {productImages.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(idx)}
@@ -149,15 +146,10 @@ export default function ProductDetails() {
                 </button>
               ))}
             </div>
-          </motion.div>
+          </div>
 
           {/* Right - Product Info */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            {/* Category & Title */}
+          <div>
             <p className="text-xs font-semibold text-amber-600 uppercase tracking-wider mb-2">
               {product.subCategory}
             </p>
@@ -198,28 +190,30 @@ export default function ProductDetails() {
             </p>
 
             {/* Color Selection */}
-            <div className="mb-5">
-              <p className="text-sm font-semibold text-slate-900 mb-2">
-                Available Colors <span className="text-slate-400 font-normal">({product.colors.length})</span>
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {product.colors.map((color, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedColor(color)}
-                    className={`
-                      w-8 h-8 rounded-full border-2 transition-all duration-200
-                      ${selectedColor === color ? 'border-slate-900 scale-110 shadow-md' : 'border-slate-200 hover:border-slate-400'}
-                    `}
-                    style={{ backgroundColor: color }}
-                    title={`Color ${idx + 1}`}
-                  />
-                ))}
+            {product.colors && product.colors.length > 0 && (
+              <div className="mb-5">
+                <p className="text-sm font-semibold text-slate-900 mb-2">
+                  Available Colors <span className="text-slate-400 font-normal">({product.colors.length})</span>
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {product.colors.map((color, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setSelectedColor(color)}
+                      className={`
+                        w-8 h-8 rounded-full border-2 transition-all duration-200
+                        ${selectedColor === color ? 'border-slate-900 scale-110 shadow-md' : 'border-slate-200 hover:border-slate-400'}
+                      `}
+                      style={{ backgroundColor: color }}
+                      title={`Color ${idx + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Size Selection */}
-            {product.sizes.length > 1 && (
+            {product.sizes && product.sizes.length > 0 && (
               <div className="mb-5">
                 <p className="text-sm font-semibold text-slate-900 mb-2">
                   Available Sizes
@@ -244,20 +238,19 @@ export default function ProductDetails() {
               </div>
             )}
 
-            {/* Quantity Slider */}
+            {/* Quantity Controls */}
             <div className="mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-sm font-semibold text-slate-900">Quantity</p>
                 <span className="text-xs text-slate-500">Min: {product.minOrder} units</span>
               </div>
               <div className="flex items-center gap-3">
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
+                <button
                   onClick={() => handleQuantityChange(-10)}
                   className="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-600 hover:border-amber-500 hover:text-amber-600 transition-colors"
                 >
                   <Minus className="w-4 h-4" />
-                </motion.button>
+                </button>
                 <div className="flex-1">
                   <input
                     type="number"
@@ -266,16 +259,15 @@ export default function ProductDetails() {
                     className="w-full text-center py-2 bg-white border border-slate-200 rounded-lg text-lg font-bold text-slate-900 focus:outline-none focus:border-amber-500"
                   />
                 </div>
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
+                <button
                   onClick={() => handleQuantityChange(10)}
                   className="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 rounded-lg text-slate-600 hover:border-amber-500 hover:text-amber-600 transition-colors"
                 >
                   <Plus className="w-4 h-4" />
-                </motion.button>
+                </button>
               </div>
 
-              {/* Bulk Tier Indicator */}
+              {/* Bulk Tier Progress Indicator */}
               <div className="mt-3">
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="text-slate-500">Bulk Discount Progress</span>
@@ -301,7 +293,7 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {/* Total Estimate */}
+            {/* Total Estimate Container */}
             <div className="mb-6 p-4 bg-amber-50 rounded-xl border border-amber-200">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-slate-600">Estimated Total</span>
@@ -319,7 +311,7 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Action Trays */}
             <div className="flex flex-col sm:flex-row gap-3 mb-6">
               <CustomButton
                 size="lg"
@@ -337,51 +329,48 @@ export default function ProductDetails() {
               </Link>
             </div>
 
-            {/* Quick Info */}
+            {/* Trust Signals badge row */}
             <div className="grid grid-cols-2 gap-3">
               {[
-                { icon: Clock, label: 'Delivery', value: product.specs.Delivery || '7-10 Days' },
-                { icon: Shield, label: 'MOQ', value: `${product.minOrder} Units` },
-                { icon: Printer, label: 'Branding', value: product.specs['Branding Methods'] || 'Multiple' },
-                { icon: Truck, label: 'Shipping', value: 'Pan India' },
+                { icon: Clock, label: 'Delivery', value: product.specs?.['Lead Time'] || '7-10 Days' },
+                { icon: Shield, label: 'MOQ Requirements', value: `${product.minOrder} Units` },
+                { icon: Printer, label: 'Branding Systems', value: product.specs?.['Customization'] || 'Premium Laser/Embroidery' },
+                { icon: Truck, label: 'Bulk Shipping', value: 'Pan India Secure' },
               ].map((info, idx) => (
-                <div key={idx} className="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg">
+                <div key={idx} className="flex items-center gap-2 p-2.5 bg-slate-50 rounded-lg border border-slate-200/60">
                   <info.icon className="w-4 h-4 text-amber-500 shrink-0" />
                   <div>
-                    <p className="text-[10px] text-slate-400 uppercase">{info.label}</p>
+                    <p className="text-[10px] text-slate-400 uppercase tracking-tight">{info.label}</p>
                     <p className="text-xs font-semibold text-slate-900">{info.value}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        {/* Specifications Table */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-12"
-        >
-          <h2 className="text-xl font-bold text-slate-900 mb-4">Technical Specifications</h2>
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-            <table className="w-full">
-              <tbody>
-                {Object.entries(product.specs).map(([key, value], idx) => (
-                  <tr key={key} className={idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'}>
-                    <td className="px-4 py-3 text-sm font-medium text-slate-600 w-1/3">{key}</td>
-                    <td className="px-4 py-3 text-sm text-slate-900">{value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Specifications Table Layout */}
+        {product.specs && (
+          <div className="mt-12">
+            <h2 className="text-xl font-bold text-slate-900 mb-4">Technical Specifications</h2>
+            <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+              <table className="w-full text-left border-collapse">
+                <tbody>
+                  {Object.entries(product.specs).map(([key, value], idx) => (
+                    <tr key={key} className={idx % 2 === 0 ? 'bg-slate-50/50' : 'bg-white'}>
+                      <td className="px-6 py-3.5 text-sm font-semibold text-slate-600 w-1/3 border-b border-slate-100">{key}</td>
+                      <td className="px-6 py-3.5 text-sm text-slate-900 border-b border-slate-100">{value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </motion.div>
+        )}
 
-        {/* Related Products */}
-        <div className="mt-12">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">You May Also Like</h2>
+        {/* Related Products Section */}
+        <div className="mt-16">
+          <h2 className="text-xl font-bold text-slate-900 mb-6">You May Also Like</h2>
           <ProductGrid showFilters={false} limit={5} />
         </div>
       </div>
