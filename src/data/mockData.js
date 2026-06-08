@@ -444,39 +444,43 @@ export const moqOptions = [
 
 export const processSteps = [
   {
-    step: 1,
+    step: "1",
     title: "Share Requirements",
     description:
-      "Tell us about quantities, timelines, products, and brand guidelines.",
-    icon: MessageSquare,
+      "Tell us about quantities, timelines, products and brand guidelines.",
+    image: "/products/step-1.png",
   },
+
   {
-    step: 2,
+    step: "2",
     title: "Design Alignment",
     description:
-      "Our team maps artwork, placement, finishes, and packaging options.",
-    icon: Palette,
+      "Our team maps artwork, placement, finishes and packaging options.",
+    image: "/products/step-2.png",
   },
+
   {
-    step: 3,
+    step: "3",
     title: "Sample Approval",
     description:
-      "Review a digital proof or production sample before bulk execution.",
-    icon: FileCheck,
+      "Review a digital proof or production sample before execution.",
+    image: "/products/step-3.png",
   },
+
   {
-    step: 4,
+    step: "4",
     title: "Bulk Production",
     description:
       "Approved products move through quality-controlled manufacturing.",
-    icon: ShieldCheck,
+    image: "/products/step-4.png",
   },
+
   {
-    step: 5,
+    step: "5",
     title: "Pan-India Delivery",
     description:
-      "Orders are packed securely and dispatched to your preferred locations.",
-    icon: Truck,
+      "Orders are securely packed and dispatched nationwide.",
+    image: "/products/step-5.png",
   },
 ];
 
@@ -616,5 +620,65 @@ export const whyChooseUs = [
       "From concept and design to manufacturing, packaging, quality checks, and delivery, we manage the complete merchandise journey.",
     image: "/products/end-to-end-service.png",
     stats: "One Partner Solution",
+  },
+];
+
+
+export const stats = [
+  {
+    value: "500+",
+    label: "Happy Clients",
+    description: "Trusted by leading organizations nationwide",
+    image: "/products/happy-clients.png",
+  },
+  {
+    value: "10,000+",
+    label: "Orders Delivered",
+    description: "Successfully fulfilled merchandise orders",
+    image: "/products/orders-delivered.png",
+  },
+  {
+    value: "25+",
+    label: "States Covered",
+    description: "Pan-India corporate merchandise reach",
+    image: "/products/states-covered.png",
+  },
+  {
+    value: "98%",
+    label: "Client Retention",
+    description: "Long-term partnerships built on trust",
+    image: "/products/client-retention.png",
+  },
+];
+
+
+export const values = [
+  {
+    number: "01",
+    title: "Passion",
+    image: "/products/value-1.png",
+    description:
+      "We believe memorable brands are built through thoughtful details. Every stitch, finish, material, and presentation element receives the attention it deserves.",
+  },
+  {
+    number: "02",
+    title: "Quality",
+    image: "/products/value-2.png",
+    description:
+      "Excellence is not an outcome but a process. We maintain uncompromising standards across sourcing, production, packaging, and delivery.",
+  },
+  {
+    number: "03",
+    title: "Partnership",
+    image: "/products/value-3.png",
+    description:
+      "We work as an extension of your team, aligning every solution with your culture, objectives, and long-term vision.",
+  },
+  {
+    number: "04",
+    title: "Innovation",
+    image: "/products/value-4.png",
+    description:
+      "We continuously explore new materials, customization methods, packaging concepts, and branding experiences to help organizations stay ahead.",
   },
 ];
