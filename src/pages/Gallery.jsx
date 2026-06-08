@@ -6,13 +6,16 @@ import { AppStateContext } from '../context/AppStateContext';
 import { Grid, SlidersHorizontal } from 'lucide-react';
 
 export default function Gallery() {
-  const { filteredProducts, setCategory, resetFilters } = useContext(AppStateContext);
+  const { filteredProducts, setCategory, resetFilters, activeCategory } = useContext(AppStateContext);
   const [searchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
 
   useEffect(() => {
+    // If a category is in the URL, set it; otherwise, default to 'all'
     if (categoryParam) {
       setCategory(categoryParam);
+    } else {
+      setCategory('all');
     }
   }, [categoryParam, setCategory]);
 
@@ -27,7 +30,9 @@ export default function Gallery() {
           </span>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-xs text-slate-400 hidden sm:inline font-sans">Showing synchronized real-time pricing tiers</span>
+          <span className="text-xs text-slate-400 hidden sm:inline font-sans">
+            Showing synchronized real-time pricing tiers
+          </span>
         </div>
       </div>
 

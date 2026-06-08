@@ -1,199 +1,289 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ShieldCheck, Award, Users, Truck, ArrowRight } from 'lucide-react';
-import { categories } from '../data/mockData';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  categories,
+  products,
+  processSteps,
+  testimonials,
+  industries,
+  whyChooseUs,
+} from "../data/mockData";
+import ProductCard from "../components/products/ProductCard";
+import {
+  ShieldCheck,
+  Palette,
+  Truck,
+  MessageSquare,
+  FileCheck,
+  Star,
+  ArrowUpRight,
+} from "lucide-react";
 
 const HERO_SLIDES = [
   {
-    desktopImage: "/products/welcomekit-desktop.png",
-    tabletImage: "/products/welcomekit-tablet.png",
-    mobileImage: "/products/welcomekit-1.png",
-    title: "Premium Corporate Merchandise Architected for Scale",
-    subtitle: "From executive onboarding kits to custom apparel, we deploy high-end branding solutions aligned with your corporate identity guidelines."
+    desktop: "/products/welcomekit-desktop.png",
+    tablet: "/products/welcomekit-tablet.png",
+    mobile: "/products/welcomekit-mobile.png",
   },
   {
-    desktopImage: "/products/polo-desktop.png",
-    tabletImage: "/products/polo-tablet.png",
-    mobileImage: "/products/polo-1.png",
-    title: "Industry-Grade Premium Apparel",
-    subtitle: "Engineered with ultra-combed 220 GSM fabrics, precision micro-embroidery patterns, and premium detailing that stands out."
+    desktop: "/products/polo-desktop.png",
+    tablet: "/products/polo-tablet.png",
+    mobile: "/products/polo-mobile.png",
   },
   {
-    desktopImage: "/products/smartbottle-desktop.png",
-    tabletImage: "/products/smartbottle-tablet.png",
-    mobileImage: "/products/smartbottle-1.png",
-    title: "Next-Gen Executive Technical Gifts",
-    subtitle: "Discover high-utility, smart IoT products and eco-conscious premium gear curated intentionally for modern workforces."
-  }
+    desktop: "/products/smartbottle-desktop.png",
+    tablet: "/products/smartbottle-tablet.png",
+    mobile: "/products/smartbottle-mobile.png",
+  },
 ];
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 6000);
+    }, 5000);
     return () => clearInterval(timer);
   }, []);
 
+  const filteredProducts =
+    activeTab === "all"
+      ? products
+      : products.filter((p) => p.category === activeTab);
+
   return (
-    <div className="w-full bg-white flex flex-col overflow-x-hidden">
-      
-      <section className="relative w-full h-[85vh] sm:h-[90vh] bg-[#0b0f14] flex items-center justify-center overflow-hidden">
-        
-        <AnimatePresence mode="popLayout">
-          <motion.div
+    <div className="w-full bg-creamy flex flex-col">
+      {/* Hero Section: Full Screen Cinematic */}
+      <section className="relative w-full h-screen overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.picture
             key={currentSlide}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.7, ease: "easeInOut" }}
-            className="absolute inset-0 w-full h-full flex items-center"
+            transition={{ duration: 0.8 }}
+            className="block w-full h-full"
           >
-            <picture className="w-full h-full select-none pointer-events-none">
-              <source media="(min-width: 1024px)" srcSet={HERO_SLIDES[currentSlide].desktopImage} />
-              <source media="(min-width: 640px)" srcSet={HERO_SLIDES[currentSlide].tabletImage} />
-              <motion.img 
-                initial={{ scale: 1.04 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0.98 }}
-                transition={{ duration: 0.9, ease: "easeOut" }}
-                src={HERO_SLIDES[currentSlide].mobileImage} 
-                alt="" 
-                className="w-full h-full object-cover object-center lg:object-[80%_center]"
-              />
-            </picture>
-            
-            {/* Optimized Gradient: Lighter on mobile, balanced on desktop */}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent lg:bg-gradient-to-r lg:from-slate-950/90 lg:via-slate-950/50 lg:to-transparent z-10" />
+            <source
+              media="(min-width: 1024px)"
+              srcSet={HERO_SLIDES[currentSlide].desktop}
+            />
+            <source
+              media="(min-width: 768px)"
+              srcSet={HERO_SLIDES[currentSlide].tablet}
+            />
+            <img
+              src={HERO_SLIDES[currentSlide].mobile}
+              alt="Product Showcase"
+              className="w-full h-full object-cover object-center"
+            />
+          </motion.picture>
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-deepBlue/10 pointer-events-none" />
+      </section>
 
-            <div className="absolute inset-0 z-20 w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 flex justify-start items-center">
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: 0.15, duration: 0.5, ease: "easeOut" }}
-                className="w-full max-w-2xl backdrop-blur-sm bg-slate-950/30 border border-white/5 rounded-2xl p-6 sm:p-12 shadow-2xl text-white"
+      {/* 2. Shop By Category */}
+      <section className="py-20 px-6 md:px-16 bg-[#FFFDF7]">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-bold text-[#0F4C81] mb-4 text-center">
+            Shop By Category
+          </h2>
+          <p className="text-center text-slate-600 mb-12 max-w-xl mx-auto">
+            Explore premium merchandise collections tailored for corporate
+            teams, institutions, and events.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {categories.map((cat) => (
+              <motion.div
+                key={cat.id}
+                whileHover={{ y: -8 }}
+                className="group bg-white rounded-[24px] shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col overflow-hidden border border-slate-100"
               >
-                <span className="inline-flex items-center text-xs font-semibold uppercase tracking-[0.25em] text-cyan-400 mb-4">
-                  B2B Production Enterprise
-                </span>
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 leading-[1.15]">
-                  {HERO_SLIDES[currentSlide].title}
-                </h1>
-                <p className="text-slate-200 text-sm sm:text-base mb-8 font-light leading-relaxed max-w-lg">
-                  {HERO_SLIDES[currentSlide].subtitle}
-                </p>
-                
-                <div className="flex flex-wrap gap-4 items-center">
-                  <Link 
-                    to="/request-quote" 
-                    className="px-8 py-3.5 rounded-lg bg-white text-slate-950 font-medium tracking-wide shadow-lg hover:bg-amber-500 hover:text-slate-900 transition-colors duration-200 text-center flex items-center justify-center gap-2 group"
+                {/* Image area with hover swap */}
+                <Link
+                  to={`/gallery?category=${cat.id}`}
+                  className="h-64 overflow-hidden relative block"
+                >
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+                  />
+                  <img
+                    src={cat.hoverImage}
+                    alt={cat.name}
+                    className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                  />
+                </Link>
+
+                {/* Info Area */}
+                <div className="p-8 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-2xl font-bold text-[#0F4C81]">
+                      {cat.name}
+                    </h3>
+                    <span className="px-3 py-1 bg-[#FFFDF7] border border-[#0F4C81]/20 text-[#0F4C81] text-xs font-bold rounded-full">
+                      {products.filter((p) => p.category === cat.id).length}{" "}
+                      Items
+                    </span>
+                  </div>
+                  <p className="text-slate-500 text-sm mb-6 flex-grow">
+                    Discover our professional range of {cat.name.toLowerCase()}{" "}
+                    designed for quality and impact.
+                  </p>
+
+                  <Link
+                    to={`/gallery?category=${cat.id}`}
+                    className="inline-flex items-center text-[#0F4C81] font-bold gap-2 group-hover:gap-4 transition-all"
                   >
-                    Get a Free Quote
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                  <Link 
-                    to="/gallery" 
-                    className="px-8 py-3.5 rounded-lg border border-white/30 text-white font-medium tracking-wide backdrop-blur-sm hover:bg-white/10 transition-colors duration-200 text-center"
-                  >
-                    View Our Products
+                    Explore Collection <ArrowUpRight className="w-4 h-4" />
                   </Link>
                 </div>
               </motion.div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+            ))}
+          </div>
+        </div>
+      </section>
 
-        <div className="absolute bottom-6 right-6 z-30 flex gap-2">
-          {HERO_SLIDES.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentSlide(idx)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentSlide ? 'w-8 bg-amber-500' : 'w-2 bg-white/40'}`}
-              aria-label={`Navigate to slide ${idx + 1}`}
-            />
+      {/* 3. Signature Collection */}
+      <section className="py-20 px-6 md:px-16 bg-[#F8F9FA]">
+        <h2 className="text-4xl font-bold text-[#0F4C81] mb-12 text-center">
+          Signature Collection
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {products.slice(0, 3).map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
 
-      {/* Trust Signals Section */}
-      <section className="w-full bg-slate-900 text-white py-10 border-b border-slate-800">
-        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
-              <Award className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-medium text-base mb-1">Premium Quality Products</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">Strict adherence to premium specifications, high GSM weights, and fine stitching metrics.</p>
-            </div>
+      {/* 4. Why Choose Us */}
+      <section className="py-24 bg-[#FFFDF7]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="text-center mb-16">
+            <span className="text-[#EAB308] uppercase tracking-[0.3em] text-sm font-semibold">
+              Why The Corp Tees
+            </span>
+
+            <h2 className="text-5xl font-bold text-[#0F4C81] mt-4 mb-5">
+              Your Trusted Corporate Merchandise Partner
+            </h2>
+
+            <p className="max-w-3xl mx-auto text-slate-600 text-lg leading-relaxed">
+              We combine premium product quality, creative branding expertise,
+              enterprise-scale production capabilities, and reliable delivery to
+              help organizations create memorable brand experiences.
+            </p>
+
+            <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+              We don't just manufacture merchandise. We create premium brand
+              experiences that strengthen engagement, improve visibility, and
+              leave lasting impressions.
+            </p>
           </div>
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-medium text-base mb-1">Custom Branding Solutions</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">Laser markings, metallic badges, high-density embroidery, or structural silk prints.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-medium text-base mb-1">Bulk Order Specialists</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">Highly responsive pricing frameworks built dynamically for thousands of units.</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-cyan-400 shrink-0">
-              <Truck className="w-6 h-6" />
-            </div>
-            <div>
-              <h4 className="font-medium text-base mb-1">Reliable Pan-India Delivery</h4>
-              <p className="text-xs text-slate-400 leading-relaxed">Fast-tracked dispatch models with fully secure door-to-door bulk shipping routes.</p>
-            </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {whyChooseUs.map((item) => (
+              <motion.div
+                key={item.id}
+                whileHover={{ y: -10 }}
+                transition={{ duration: 0.3 }}
+                className="group bg-white rounded-[28px] overflow-hidden border border-slate-200 shadow-sm hover:shadow-2xl"
+              >
+                {/* Image */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+
+                  <span className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-[#0F4C81] px-4 py-2 rounded-full text-xs font-bold tracking-wide">
+                    {item.stats}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-[#0F4C81] mb-4">
+                    {item.title}
+                  </h3>
+
+                  <p className="text-slate-600 leading-relaxed">
+                    {item.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Category Matrix */}
-      <section className="w-full py-20 bg-slate-50">
-        <div className="w-full max-w-[1440px] mx-auto px-6 md:px-12 lg:px-16">
-          <div className="text-center max-w-xl mx-auto mb-16">
-            <span className="text-xs font-semibold tracking-widest uppercase text-slate-400">Curated Assortment</span>
-            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 mt-2">Shop by Category</h2>
-            <div className="w-12 h-1 bg-slate-900 mx-auto mt-4" />
-          </div>
+      {/* 5. Process Timeline */}
+      <section className="py-20 px-6 md:px-16 bg-[#0F4C81] text-white">
+        <h2 className="text-4xl font-bold mb-12 text-center">Our Process</h2>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {processSteps.map((step, i) => (
+            <div key={i} className="text-center">
+              <step.icon className="w-10 h-10 mx-auto mb-4 text-[#EAB308]" />
+              <p className="font-bold uppercase text-sm">{step.title}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 justify-center">
-            {categories.map((cat) => (
-              <motion.div
-                whileHover={{ y: -6 }}
-                key={cat.id}
-                className="flex flex-col items-center text-center group"
-              >
-                <Link to={`/gallery?category=${cat.id}`} className="w-full flex flex-col items-center">
-                  <div className="relative w-36 h-36 sm:w-40 sm:h-40 rounded-full overflow-hidden border border-slate-200/80 shadow-md group-hover:shadow-xl transition-all duration-300 mb-4 bg-white flex items-center justify-center p-2">
-                    <img 
-                      src={cat.image} 
-                      alt={cat.name} 
-                      className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500 ease-out"
-                    />
-                    <div className="absolute inset-0 bg-slate-950/10 group-hover:bg-transparent transition-colors duration-300" />
-                  </div>
-                  <h3 className="font-medium text-sm sm:text-base text-slate-800 group-hover:text-slate-950 transition-colors font-sans">
-                    {cat.name}
-                  </h3>
-                  <span className="text-xs text-slate-400 mt-1 font-mono">{cat.count} Variants</span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
+      {/* 6. Testimonials Carousel */}
+      <section className="py-20 px-6 md:px-16 bg-[#FFFDF7]">
+        <h2 className="text-4xl font-bold text-[#0F4C81] mb-12 text-center">
+          Trusted by Industry Leaders
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {testimonials.map((t, i) => (
+            <div
+              key={i}
+              className="p-6 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div className="flex text-[#EAB308] mb-4">
+                {[...Array(5)].map((_, star) => (
+                  <Star
+                    key={star}
+                    className={`w-4 h-4 ${star < t.rating ? "fill-current" : "text-slate-200"}`}
+                  />
+                ))}
+              </div>
+              <p className="text-slate-600 text-sm italic mb-6">"{t.text}"</p>
+              <div>
+                <p className="font-bold text-[#0F4C81] text-sm">{t.name}</p>
+                <p className="text-xs text-slate-400">
+                  {t.role}, {t.company}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 7. Industries We Serve */}
+      <section className="py-20 bg-white px-8">
+        <h2 className="text-4xl font-bold text-[#0F4C81] mb-12 text-center">
+          Industries We Serve
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {industries.map((ind) => (
+            <div
+              key={ind.id}
+              className="p-6 bg-[#FFFDF7] rounded-lg border border-slate-100 hover:border-[#EAB308] transition-colors"
+            >
+              <h4 className="font-bold text-[#0F4C81] text-lg">{ind.name}</h4>
+              <p className="text-sm text-slate-600 mt-2">{ind.description}</p>
+            </div>
+          ))}
         </div>
       </section>
     </div>
