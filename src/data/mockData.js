@@ -596,7 +596,7 @@ export const whyChooseUs = [
     title: "Bulk Order Specialists",
     description:
       "Whether it's 100 units or 10,000 units, our manufacturing capabilities are built to handle enterprise-scale merchandise programs.",
-    image: "/products/bulk-orders.png",
+    image: "/products/bulk-order-specialists.png",
     stats: "10,000+ Units Capacity",
   },
 
