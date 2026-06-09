@@ -12,6 +12,7 @@ import Services from "./pages/Services";
 import QuoteCartDrawer from "./components/products/QuoteCartDrawer";
 import { AppStateProvider } from "./context/AppStateContext";
 import ScrollToTop from "./components/shared/ScrollToTop";
+import Testimonials from "./pages/Testimonials";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/industries" element={<Industries />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/testimonials" element={<Testimonials />} />
             </Routes>
           </main>
 
