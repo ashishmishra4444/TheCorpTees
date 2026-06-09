@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import {
   ArrowRight,
   Check,
@@ -151,7 +151,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl sm:text-5xl xl:text-6xl font-bold text-white leading-[1.2] tracking-tight"
+              className="text-2xl sm:text-4xl xl:text-5xl font-bold text-white leading-[1.2] tracking-tight"
             >
               Corporate Merchandise
               <span className="text-amber-500 block">
@@ -163,7 +163,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-slate-300 text-base lg:text-lg max-w-xl leading-relaxed"
+              className="text-slate-300 text-sm lg:text-md max-w-xl leading-relaxed"
             >
               From employee onboarding kits to branded apparel, gifting
               programs, event merchandise and institutional uniforms, we help
@@ -221,7 +221,7 @@ const HeroSection = () => {
           </div>
 
           {/* Right column – controlled product collage */}
-          <div className="relative h-[450px] hidden lg:block">
+          <div className="relative h-[450px] hidden lg:block cursor-pointer">
             {showcaseProducts.map((product, idx) => (
               <motion.div
                 key={idx}
@@ -264,64 +264,75 @@ const HeroSection = () => {
   );
 };
 
-// Service Overview Card Component
-const ServiceCard = ({ service, index }) => {
+// ========== NEW: Floating Service Component – No Container, No Card ==========
+const FloatingService = ({ service, index, isCenter = false }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Size variants
+  const imageSize = isCenter
+    ? "w-[280px] h-[280px] md:w-[320px] md:h-[320px]"
+    : "w-[200px] h-[200px] md:w-[240px] md:h-[240px]";
+
+  const titleSize = isCenter
+    ? "text-2xl md:text-3xl"
+    : "text-xl md:text-2xl";
+
+  const descSize = isCenter
+    ? "text-base md:text-lg"
+    : "text-sm md:text-base";
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      viewport={{ once: true }}
+      transition={{ delay: index * 0.15, duration: 0.6, type: "spring", stiffness: 100 }}
+      viewport={{ once: true, margin: "-50px" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group relative bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500"
+      className="flex flex-col items-center text-center group"
+      style={{ transform: isHovered ? "translateY(-12px)" : "none", transition: "transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1)" }}
     >
-      <div className="relative h-56 overflow-hidden">
-        <motion.img
-          src={service.image}
-          alt={service.title}
-          className="w-full h-full object-cover"
-          animate={{ scale: isHovered ? 1.08 : 1 }}
-          transition={{ duration: 0.5 }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-      </div>
-      <div className="p-6">
-        <h3 className="text-xl font-bold text-slate-900 mb-2">
-          {service.title}
-        </h3>
-        <p className="text-slate-500 text-sm mb-4">{service.description}</p>
-        <div className="flex flex-wrap gap-2 mb-4">
-          {service.offerings.slice(0, 4).map((item, i) => (
-            <span
-              key={i}
-              className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full"
-            >
-              {item}
-            </span>
-          ))}
-          {service.offerings.length > 4 && (
-            <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-full">
-              +{service.offerings.length - 4} more
-            </span>
-          )}
+      {/* Circular Image with Golden Ring – No background container */}
+      <div className="relative mb-6">
+        <div className={`relative ${imageSize}`}>
+          {/* Golden ring */}
+          <div
+            className={`absolute inset-0 rounded-full border-2 border-[#EAB308] transition-all duration-300 ${
+              isHovered ? "shadow-[0_0_0_8px_rgba(234,179,8,0.15)] scale-105" : ""
+            }`}
+          />
+          <motion.div
+            className="w-full h-full rounded-full overflow-hidden shadow-xl"
+            animate={{ scale: isHovered ? 1.08 : 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
         </div>
+      </div>
+
+      {/* Title */}
+      <h3 className={`${titleSize} font-bold text-[#0F4C81] mb-3 transition-colors duration-300 group-hover:text-[#0d3f6d]`}>
+        {service.title}
+      </h3>
+
+      {/* Description */}
+      <p className={`${descSize} text-slate-500 max-w-xs mx-auto leading-relaxed`}>
+        {service.description}
+      </p>
+
+      {/* CTA */}
+      <div className="mt-5">
         <Link to={`/gallery?category=${service.categoryLink}`}>
-          <button className="text-[#EAB308] font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
+          <span className="text-[#EAB308] font-semibold text-sm inline-flex items-center gap-1 group-hover:gap-2 transition-all duration-300">
             Explore Products <ArrowRight size={14} />
-          </button>
+          </span>
         </Link>
       </div>
-      {isHovered && (
-        <motion.div
-          layoutId="serviceGlow"
-          className="absolute inset-0 pointer-events-none rounded-2xl border-2 border-[#EAB308]/40"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-        />
-      )}
     </motion.div>
   );
 };
@@ -544,7 +555,7 @@ const CorporateGiftingGrid = () => {
 // Why Choose Us Section (reusing existing data)
 const WhyChooseUsSection = () => {
   return (
-    <section className="py-24 bg-slate-50">
+    <section id="why-choose-us" className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         <SectionReveal>
           <div className="text-center mb-12">
@@ -560,39 +571,39 @@ const WhyChooseUsSection = () => {
             </p>
           </div>
         </SectionReveal>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {whyChooseUs.map((item, idx) => (
-            <SectionReveal key={idx}>
-              <motion.div
-                whileHover={{ y: -4 }}
-                className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm"
-              >
-                <div className="w-12 h-12 rounded-lg bg-amber-100 flex items-center justify-center mb-4">
-                  {item.id === 1 && (
-                    <Shield className="w-6 h-6 text-amber-600" />
-                  )}
-                  {item.id === 2 && (
-                    <Sparkles className="w-6 h-6 text-amber-600" />
-                  )}
-                  {item.id === 3 && (
-                    <Truck className="w-6 h-6 text-amber-600" />
-                  )}
-                  {item.id === 4 && (
-                    <Package className="w-6 h-6 text-amber-600" />
-                  )}
-                  {item.id === 5 && (
-                    <Headphones className="w-6 h-6 text-amber-600" />
-                  )}
-                  {item.id === 6 && (
-                    <Award className="w-6 h-6 text-amber-600" />
-                  )}
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">
+
+        {/* Premium image cards – identical to Home page design */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {whyChooseUs.map((item) => (
+            <motion.div
+              key={item.id}
+              whileHover={{ y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="group bg-white rounded-[28px] overflow-hidden border border-slate-200 shadow-sm hover:shadow-2xl"
+            >
+              {/* Image with zoom and overlay */}
+              <div className="relative h-64 overflow-hidden">
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition duration-700 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                <span className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm text-[#0F4C81] px-4 py-2 rounded-full text-xs font-bold tracking-wide">
+                  {item.stats}
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="p-8">
+                <h3 className="text-2xl font-bold text-[#0F4C81] mb-4">
                   {item.title}
                 </h3>
-                <p className="text-slate-500 text-sm">{item.description}</p>
-              </motion.div>
-            </SectionReveal>
+                <p className="text-slate-600 leading-relaxed">
+                  {item.description}
+                </p>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -693,16 +704,44 @@ const FinalCTASection = () => {
 
 // Main Services Component
 export default function Services() {
-  const firstRowServices = services.slice(0, 3);
-  const secondRowServices = services.slice(3, 5);
+  const location = useLocation();
+
+  // Scroll to #why-choose-us if hash matches
+  useEffect(() => {
+    if (location.hash === "#why-choose-us") {
+      const element = document.getElementById("why-choose-us");
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      }
+    }
+  }, [location]);
+
+  const allServices = services;
 
   return (
     <div className="min-h-screen bg-white">
       <HeroSection />
-      <section className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+
+      {/* ========== REDESIGNED "EVERYTHING YOUR BRAND NEEDS" SECTION – NO CARDS, FLOATING LAYOUT ========== */}
+      <section className="py-24 bg-[#FAFAF8] relative overflow-hidden">
+        {/* Background luxury gradients and noise */}
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
+          <div className="absolute top-20 left-10 w-96 h-96 rounded-full bg-amber-100/40 blur-[100px]" />
+          <div className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-blue-100/30 blur-[100px]" />
+        </div>
+        <div
+          className="absolute inset-0 opacity-[0.015] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            backgroundRepeat: "repeat",
+          }}
+        />
+
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
           <SectionReveal>
-            <div className="text-center mb-12">
+            <div className="text-center mb-16">
               <span className="text-[#EAB308] text-xs font-semibold uppercase tracking-[0.25em]">
                 Comprehensive Solutions
               </span>
@@ -713,21 +752,107 @@ export default function Services() {
                 End-to-end merchandise solutions for enterprises, institutions
                 and growing teams.
               </p>
+              {/* Luxury divider */}
+              <div className="flex items-center justify-center gap-3 mt-8">
+                <div className="h-px w-12 bg-amber-200" />
+                <span className="text-amber-500 text-sm">●</span>
+                <div className="h-px w-12 bg-amber-200" />
+              </div>
             </div>
           </SectionReveal>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {firstRowServices.map((service, idx) => (
-              <ServiceCard key={service.id} service={service} index={idx} />
-            ))}
+
+          {/* Radial-inspired floating layout – no containers, just floating elements */}
+          <div className="relative">
+            {/* Desktop: custom grid for radial feel */}
+            <div className="hidden lg:block">
+              <div className="grid grid-cols-3 gap-y-24 gap-x-16 items-center justify-items-center">
+                {/* Top Center */}
+                <div className="col-start-2">
+                  <FloatingService service={allServices[0]} index={0} isCenter={false} />
+                </div>
+                {/* Left */}
+                <div className="col-start-1 row-start-2">
+                  <FloatingService service={allServices[1]} index={1} isCenter={false} />
+                </div>
+                {/* Center (featured) */}
+                <div className="col-start-2 row-start-2">
+                  <FloatingService service={allServices[2]} index={2} isCenter={true} />
+                </div>
+                {/* Right */}
+                <div className="col-start-3 row-start-2">
+                  <FloatingService service={allServices[3]} index={3} isCenter={false} />
+                </div>
+                {/* Bottom Center */}
+                <div className="col-start-2 row-start-3">
+                  <FloatingService service={allServices[4]} index={4} isCenter={false} />
+                </div>
+              </div>
+            </div>
+
+            {/* Tablet: 2 columns, even spacing */}
+            <div className="hidden md:block lg:hidden">
+              <div className="grid md:grid-cols-2 gap-16 justify-items-center">
+                {allServices.map((service, idx) => (
+                  <FloatingService
+                    key={service.id}
+                    service={service}
+                    index={idx}
+                    isCenter={idx === 2}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Mobile: 1 column, stacked */}
+            <div className="md:hidden">
+              <div className="flex flex-col items-center gap-16">
+                {allServices.map((service, idx) => (
+                  <FloatingService
+                    key={service.id}
+                    service={service}
+                    index={idx}
+                    isCenter={idx === 2}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-          <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-            {secondRowServices.map((service, idx) => (
-              <ServiceCard key={service.id} service={service} index={idx + 3} />
-            ))}
-          </div>
+
+          {/* Bottom CTA Banner (kept as is, but with no card styling – it's a separate callout) */}
+          <SectionReveal>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mt-24 text-center"
+            >
+              <div className="max-w-3xl mx-auto">
+                <h3 className="text-2xl md:text-3xl font-bold text-[#0F4C81] mb-4">
+                  Need a Customized Merchandise Program?
+                </h3>
+                <p className="text-slate-500 max-w-2xl mx-auto mb-6">
+                  Our team helps enterprises build scalable merchandise
+                  solutions tailored to their workforce, events, gifting
+                  initiatives, and branding goals.
+                </p>
+                <Link to="/contact">
+                  <CustomButton
+                    size="lg"
+                    icon={ArrowRight}
+                    iconPosition="right"
+                    className="bg-[#0F4C81] hover:bg-[#0d3f6d] text-white"
+                  >
+                    Talk To Our Team
+                  </CustomButton>
+                </Link>
+              </div>
+            </motion.div>
+          </SectionReveal>
         </div>
       </section>
 
+      {/* Rest of the page – unchanged */}
       <section className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
           <DetailedServiceSection service={services[0]} reverse={false} />
@@ -780,8 +905,6 @@ export default function Services() {
       </section>
 
       <TestimonialsSection />
-
-
       <WhyChooseUsSection />
 
       <section className="py-24 bg-white">

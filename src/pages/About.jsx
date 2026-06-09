@@ -339,7 +339,11 @@ export default function About() {
       <ImpactShowcase stats={stats} />
 
       {/* Luxury Process Showcase */}
-      <ProcessShowcase processSteps={processSteps} headingColor="#020817" headingSize="text-2xl sm:text-3xl" />
+      <ProcessShowcase
+        processSteps={processSteps}
+        headingColor="#020817"
+        headingSize="text-2xl sm:text-3xl"
+      />
 
       {/* Core Values */}
       <CoreValuesManifesto />
@@ -358,12 +362,22 @@ export default function About() {
             </div>
           </SectionReveal>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             {testimonials.map((testimonial, index) => (
               <SectionReveal key={index}>
                 <motion.div
                   whileHover={{ y: -4 }}
-                  className="p-5 bg-white rounded-xl border border-slate-200 shadow-sm"
+                  className="
+                    h-full
+                    flex
+                    flex-col
+                    p-5
+                    bg-white
+                    rounded-xl
+                    border
+                    border-slate-200
+                    shadow-sm
+                  "
                 >
                   <div className="flex items-center gap-1 mb-3">
                     {[...Array(testimonial.rating)].map((_, i) => (
@@ -373,16 +387,19 @@ export default function About() {
                       />
                     ))}
                   </div>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
+
+                  <p className="text-sm text-slate-600 leading-relaxed mb-4 flex-grow">
                     "{testimonial.text}"
                   </p>
-                  <div className="flex items-center gap-3">
+
+                  <div className="flex items-center gap-3 mt-auto">
                     <div className="w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center text-white font-bold text-sm">
                       {testimonial.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </div>
+
                     <div>
                       <p className="text-sm font-semibold text-slate-900">
                         {testimonial.name}
