@@ -8,6 +8,7 @@ import RequestQuote from "./pages/RequestQuote";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Industries from "./pages/Industries";
+import Services from "./pages/Services";
 import QuoteCartDrawer from "./components/products/QuoteCartDrawer";
 import { AppStateProvider } from "./context/AppStateContext";
 import ScrollToTop from "./components/shared/ScrollToTop";
@@ -30,6 +31,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/industries" element={<Industries />} />
+              <Route path="/services" element={<Services />} />
             </Routes>
           </main>
 
