@@ -162,7 +162,7 @@ export default function RequestQuote() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -179,47 +179,61 @@ export default function RequestQuote() {
         </motion.div>
 
         {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            {steps.map((step, idx) => (
-              <div key={step.id} className="flex items-center flex-1">
-                <div className="flex flex-col items-center">
-                  <motion.div
-                    animate={{
-                      backgroundColor:
-                        currentStep >= step.id ? "#f59e0b" : "#e2e8f0",
-                      scale: currentStep === step.id ? 1.1 : 1,
-                    }}
-                    className={`
-                      w-12 h-12 rounded-xl flex items-center justify-center mb-2
-                      ${currentStep > step.id ? "bg-emerald-500" : ""}
-                    `}
-                  >
-                    {currentStep > step.id ? (
-                      <Check className="w-5 h-5 text-white" />
-                    ) : (
-                      <step.icon
-                        className={`w-5 h-5 ${currentStep >= step.id ? "text-slate-900" : "text-slate-400"}`}
-                      />
-                    )}
-                  </motion.div>
-                  <span
-                    className={`
-                    text-xs font-medium
-                    ${currentStep >= step.id ? "text-slate-900" : "text-slate-400"}
-                  `}
-                  >
-                    {step.title}
-                  </span>
-                </div>
-                {idx < steps.length - 1 && (
-                  <div
-                    className={`
-                    flex-1 h-1 mx-4 rounded-full
-                    ${currentStep > step.id ? "bg-emerald-500" : "bg-slate-200"}
-                  `}
-                  />
-                )}
+        <div className="mb-10 max-w-3xl mx-auto">
+          <div className="relative grid grid-cols-3 items-start">
+            {/* Background Line */}
+            <div className="absolute top-6 left-[16.66%] right-[16.66%] h-1 bg-slate-200 rounded-full z-0" />
+
+            {/* Active Line */}
+            <div
+              className="absolute top-6 left-[16.66%] h-1 bg-emerald-500 rounded-full z-0 transition-all duration-500"
+              style={{
+                width:
+                  currentStep === 1 ? "0%" : currentStep === 2 ? "33%" : "66%",
+              }}
+            />
+
+            {steps.map((step) => (
+              <div
+                key={step.id}
+                className="relative z-10 flex flex-col items-center text-center"
+              >
+                <motion.div
+                  animate={{
+                    scale: currentStep === step.id ? 1.08 : 1,
+                  }}
+                  className={`
+            w-14 h-14 rounded-xl flex items-center justify-center mb-3
+            ${
+              currentStep > step.id
+                ? "bg-emerald-500"
+                : currentStep === step.id
+                  ? "bg-amber-500"
+                  : "bg-slate-200"
+            }
+          `}
+                >
+                  {currentStep > step.id ? (
+                    <Check className="w-5 h-5 text-white" />
+                  ) : (
+                    <step.icon
+                      className={`w-5 h-5 ${
+                        currentStep >= step.id
+                          ? "text-slate-900"
+                          : "text-slate-400"
+                      }`}
+                    />
+                  )}
+                </motion.div>
+
+                <span
+                  className={`
+            text-sm font-medium
+            ${currentStep >= step.id ? "text-slate-900" : "text-slate-400"}
+          `}
+                >
+                  {step.title}
+                </span>
               </div>
             ))}
           </div>
@@ -232,7 +246,7 @@ export default function RequestQuote() {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8"
+          className="bg-white rounded-3xl shadow-lg border border-slate-200 p-8 sm:p-10"
         >
           {/* Step 1: Company Profile */}
           {currentStep === 1 && (
