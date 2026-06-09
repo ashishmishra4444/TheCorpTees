@@ -10,11 +10,13 @@ import Contact from "./pages/Contact";
 import Industries from "./pages/Industries";
 import QuoteCartDrawer from "./components/products/QuoteCartDrawer";
 import { AppStateProvider } from "./context/AppStateContext";
+import ScrollToTop from "./components/shared/ScrollToTop";
 
 function App() {
   return (
     <AppStateProvider>
       <Router>
+        <ScrollToTop />
         <div className="min-h-screen w-full flex flex-col bg-slate-50 text-slate-900 selection:bg-slate-900 selection:text-white antialiased">
           <Navbar />
 
