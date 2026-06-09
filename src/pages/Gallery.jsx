@@ -1,21 +1,29 @@
-import { useContext, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import SidebarFilter from '../components/layout/SidebarFilter';
-import ProductCard from '../components/products/ProductCard';
-import { AppStateContext } from '../context/AppStateContext';
-import { Grid, SlidersHorizontal } from 'lucide-react';
+import { useContext, useEffect, useLayoutEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import SidebarFilter from "../components/layout/SidebarFilter";
+import ProductCard from "../components/products/ProductCard";
+import { AppStateContext } from "../context/AppStateContext";
+import { Grid, SlidersHorizontal } from "lucide-react";
 
 export default function Gallery() {
-  const { filteredProducts, setCategory, resetFilters, activeCategory } = useContext(AppStateContext);
+  const { filteredProducts, setCategory, resetFilters, activeCategory } =
+    useContext(AppStateContext);
   const [searchParams] = useSearchParams();
-  const categoryParam = searchParams.get('category');
+
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, []);
+  const categoryParam = searchParams.get("category");
 
   useEffect(() => {
     // If a category is in the URL, set it; otherwise, default to 'all'
     if (categoryParam) {
       setCategory(categoryParam);
     } else {
-      setCategory('all');
+      setCategory("all");
     }
   }, [categoryParam, setCategory]);
 
@@ -38,7 +46,6 @@ export default function Gallery() {
 
       {/* Main Structural Matrix Breakout Layout */}
       <div className="w-full flex flex-1 items-stretch">
-        
         {/* Left Frame Border Sidebar */}
         <aside className="w-72 hidden lg:block border-r border-slate-200 bg-white shrink-0">
           <div className="sticky top-16 h-[calc(100vh-8rem)] overflow-y-auto p-6">
@@ -51,9 +58,14 @@ export default function Gallery() {
           {filteredProducts.length === 0 ? (
             <div className="w-full h-96 flex flex-col items-center justify-center text-center bg-white border border-dashed border-slate-300 rounded-2xl p-8">
               <SlidersHorizontal className="w-10 h-10 text-slate-300 mb-3" />
-              <h3 className="text-lg font-medium text-slate-800 mb-1">No Variants Matches</h3>
-              <p className="text-sm text-slate-400 max-w-sm">Refine your custom search parameters or reset your categories toolbar to show all.</p>
-              <button 
+              <h3 className="text-lg font-medium text-slate-800 mb-1">
+                No Variants Matches
+              </h3>
+              <p className="text-sm text-slate-400 max-w-sm">
+                Refine your custom search parameters or reset your categories
+                toolbar to show all.
+              </p>
+              <button
                 onClick={resetFilters}
                 className="mt-4 px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs tracking-wider uppercase font-medium transition-colors"
               >
