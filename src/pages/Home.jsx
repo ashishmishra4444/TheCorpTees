@@ -10,15 +10,8 @@ import {
   whyChooseUs,
 } from "../data/mockData";
 import ProductCard from "../components/products/ProductCard";
-import {
-  ShieldCheck,
-  Palette,
-  Truck,
-  MessageSquare,
-  FileCheck,
-  Star,
-  ArrowUpRight,
-} from "lucide-react";
+import { Star, ArrowUpRight } from "lucide-react";
+import ProcessShowcase from "../components/layout/ProcessShowcase";
 
 const HERO_SLIDES = [
   {
@@ -38,9 +31,8 @@ const HERO_SLIDES = [
   },
 ];
 
-export default function Home() {
+const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -48,11 +40,6 @@ export default function Home() {
     }, 5000);
     return () => clearInterval(timer);
   }, []);
-
-  const filteredProducts =
-    activeTab === "all"
-      ? products
-      : products.filter((p) => p.category === activeTab);
 
   return (
     <div className="w-full bg-creamy flex flex-col">
@@ -169,17 +156,17 @@ export default function Home() {
               Why The Corp Tees
             </span>
 
-            <h2 className="text-5xl font-bold text-[#0F4C81] mt-4 mb-5">
+            <h2 className="text-4xl font-bold text-[#0F4C81] mt-4 mb-5">
               Your Trusted Corporate Merchandise Partner
             </h2>
 
-            <p className="max-w-3xl mx-auto text-slate-600 text-lg leading-relaxed">
+            <p className="max-w-3xl mx-auto text-slate-600 leading-relaxed">
               We combine premium product quality, creative branding expertise,
               enterprise-scale production capabilities, and reliable delivery to
               help organizations create memorable brand experiences.
             </p>
 
-            <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+            <p className="text-slate-600 max-w-2xl mx-auto mt-1.5 leading-relaxed">
               We don't just manufacture merchandise. We create premium brand
               experiences that strengthen engagement, improve visibility, and
               leave lasting impressions.
@@ -226,17 +213,7 @@ export default function Home() {
       </section>
 
       {/* 5. Process Timeline */}
-      <section className="py-20 px-6 md:px-16 bg-[#0F4C81] text-white">
-        <h2 className="text-4xl font-bold mb-12 text-center">Our Process</h2>
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          {processSteps.map((step, i) => (
-            <div key={i} className="text-center">
-              <step.icon className="w-10 h-10 mx-auto mb-4 text-[#EAB308]" />
-              <p className="font-bold uppercase text-sm">{step.title}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <ProcessShowcase processSteps={processSteps} headingColor="#0F4C81" />
 
       {/* 6. Testimonials Carousel */}
       <section className="py-20 px-6 md:px-16 bg-[#FFFDF7]">
@@ -288,4 +265,6 @@ export default function Home() {
       </section>
     </div>
   );
-}
+};
+
+export default Home;

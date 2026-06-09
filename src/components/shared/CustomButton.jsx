@@ -40,7 +40,7 @@ export default function CustomButton({
       transition={{ type: 'spring', stiffness: 400, damping: 25 }}
       className={`
         inline-flex items-center justify-center gap-2 rounded-lg
-        transition-colors duration-200
+        transition-colors duration-200 cursor-pointer
         focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2
         disabled:opacity-50 disabled:cursor-not-allowed
         ${variantStyles[variant]}

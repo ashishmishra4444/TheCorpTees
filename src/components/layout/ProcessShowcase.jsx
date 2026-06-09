@@ -2,7 +2,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-export default function ProcessShowcase({ processSteps }) {
+export default function ProcessShowcase({
+  processSteps,
+  headingColor = "#0F4C81",
+  headingSize = "text-3xl sm:text-4xl"
+}) {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
@@ -14,7 +18,10 @@ export default function ProcessShowcase({ processSteps }) {
             How We Work
           </span>
 
-          <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-[#020817]">
+          <h2
+            className={`mt-4 ${headingSize} font-bold`}
+            style={{ color: headingColor }}
+          >
             Our 5-Step Process
           </h2>
 
@@ -81,6 +88,7 @@ export default function ProcessShowcase({ processSteps }) {
                 onClick={() => setActiveStep(index)}
                 whileHover={{ y: -2 }}
                 className={`
+                  cursor-pointer
                   relative
                   px-6 py-5
                   rounded-2xl
@@ -97,9 +105,7 @@ export default function ProcessShowcase({ processSteps }) {
               >
                 <div
                   className={`text-sm font-bold ${
-                    activeStep === index
-                      ? "text-[#EAB308]"
-                      : "text-slate-400"
+                    activeStep === index ? "text-[#EAB308]" : "text-slate-400"
                   }`}
                 >
                   0{step.step}
@@ -107,9 +113,7 @@ export default function ProcessShowcase({ processSteps }) {
 
                 <div
                   className={`mt-2 font-semibold ${
-                    activeStep === index
-                      ? "text-white"
-                      : "text-slate-800"
+                    activeStep === index ? "text-white" : "text-slate-800"
                   }`}
                 >
                   {step.title}

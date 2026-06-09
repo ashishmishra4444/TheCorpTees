@@ -250,12 +250,12 @@ export default function About() {
             </p>
             <div className="flex flex-wrap gap-3 mt-8">
               <Link to="/request-quote">
-                <button className="bg-[#EAB308] hover:bg-[#d8a707] text-slate-900 font-medium px-5 py-2.5 rounded-lg transition-all text-sm">
+                <button className="bg-[#EAB308] hover:bg-[#d8a707] text-slate-900 font-medium px-5 py-2.5 rounded-lg transition-all text-sm cursor-pointer">
                   Get Free Quote
                 </button>
               </Link>
               <Link to="/gallery">
-                <button className="border border-white/20 bg-white/5 text-white font-medium px-5 py-2.5 rounded-lg hover:bg-white/10 transition-all text-sm">
+                <button className="border border-white/20 bg-white/5 text-white font-medium px-5 py-2.5 rounded-lg hover:bg-white/10 transition-all text-sm cursor-pointer">
                   View Products
                 </button>
               </Link>
@@ -339,7 +339,7 @@ export default function About() {
       <ImpactShowcase stats={stats} />
 
       {/* Luxury Process Showcase */}
-      <ProcessShowcase processSteps={processSteps} />
+      <ProcessShowcase processSteps={processSteps} headingColor="#020817" headingSize="text-2xl sm:text-3xl" />
 
       {/* Core Values */}
       <CoreValuesManifesto />
